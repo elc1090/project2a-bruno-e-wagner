@@ -1,64 +1,82 @@
 // Get the GitHub username input form
 const gitHubForm = document.getElementById('gitHubForm');
+const searchRepoButton = document.getElementById('searchRepoButton');
 
 // Listen for submissions on GitHub username input form
 gitHubForm.addEventListener('submit', (e) => {
-
-    // Prevent default form submission action
     e.preventDefault();
 
-    // Get the GitHub username input field on the DOM
-    let usernameInput = document.getElementById('usernameInput');
+    let gitHubUsername = document.getElementById('usernameInput').value;
+    let repositoryName = document.getElementById('repositorySelect').value;
 
-    // Get the value of the GitHub username input field
-    let gitHubUsername = usernameInput.value;
+    if (gitHubUsername && repositoryName) {
+        inputSubmit.value = 'Buscando commits...';
+        inputSubmit.disabled = true;
 
-    // Run GitHub API function, passing in the GitHub username
+        requestRepoCommits(gitHubUsername, repositoryName)
+            .then(response => response.json()) // parse response into json
+            .then(data => {
+                if (data) {
+                    let ul = document.getElementById('repoCommits');
+                    ul.innerHTML = "";
+
+                    for (let i in data) {
+                        let li = document.createElement('li');
+                        li.classList.add('list-group-item')
+
+                        let commitDate = new Date(data[i].commit.committer.date).toLocaleString();
+
+                        li.innerHTML = (`
+                        <p><strong>Data:</strong> ${commitDate}</p>
+                        <p><strong>Mensagem:</strong> ${data[i].commit.message}</p>
+                    `);
+
+                        ul.appendChild(li);
+                    }
+                }
+
+                inputSubmit.disabled = false;
+                inputSubmit.value = 'Buscar';
+            })
+    }
+})
+
+searchRepoButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    searchRepoButton.disabled = true;
+    searchRepoButton.textContent = 'Aguarde';
+
+    let gitHubUsername = document.getElementById('usernameInput').value;
+
     requestUserRepos(gitHubUsername)
-        .then(response => response.json()) // parse response into json
+        .then(response => response.json())
         .then(data => {
-            // update html with data from github
+            //console.log(data)
+            let repositorySelect = document.getElementById('repositorySelect');
+            repositorySelect.innerHTML = "";
+            let selectOptions = '';
+            
             for (let i in data) {
-                // Get the ul with id of userRepos
-
                 if (data.message === "Not Found") {
-                    let ul = document.getElementById('userRepos');
-
-                    // Create variable that will create li's to be added to ul
-                    let li = document.createElement('li');
-
-                    // Add Bootstrap list item class to each li
-                    li.classList.add('list-group-item')
-                    // Create the html markup for each li
-                    li.innerHTML = (`
-                <p><strong>No account exists with username:</strong> ${gitHubUsername}</p>`);
-                    // Append each li to the ul
-                    ul.appendChild(li);
+                    alert('Usuário não encontrado')
                 } else {
-
-                    let ul = document.getElementById('userRepos');
-
-                    // Create variable that will create li's to be added to ul
-                    let li = document.createElement('li');
-
-                    // Add Bootstrap list item class to each li
-                    li.classList.add('list-group-item')
-
-                    // Create the html markup for each li
-                    li.innerHTML = (`
-                <p><strong>Repo:</strong> ${data[i].name}</p>
-                <p><strong>Description:</strong> ${data[i].description}</p>
-                <p><strong>URL:</strong> <a href="${data[i].html_url}">${data[i].html_url}</a></p>
-            `);
-
-                    // Append each li to the ul
-                    ul.appendChild(li);
+                    selectOptions += `<option value="${data[i].name}">${data[i].name}</option></p>`;
                 }
             }
+
+            repositorySelect.disabled = selectOptions ? false : true;
+            repositorySelect.innerHTML = selectOptions;
+
+            searchRepoButton.textContent = 'Buscar';
+            searchRepoButton.disabled = false;
         })
 })
 
 function requestUserRepos(username) {
     // create a variable to hold the `Promise` returned from `fetch`
     return Promise.resolve(fetch(`https://api.github.com/users/${username}/repos`));
+}
+
+function requestRepoCommits(username, repo) {
+    return Promise.resolve(fetch(`https://api.github.com/repos/${username}/${repo}/commits`));
 }
