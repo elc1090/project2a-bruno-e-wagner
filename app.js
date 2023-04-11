@@ -27,9 +27,17 @@ gitHubForm.addEventListener('submit', (e) => {
                         let commitDate = new Date(data[i].commit.committer.date).toLocaleString();
 
                         li.innerHTML = (`
-                        <p><strong>Data:</strong> ${commitDate}</p>
-                        <p><strong>avatar:</strong> <img style="width: 50px; height:50px;" src="${data[i].author.avatar_url}"></p>
-                        <p><strong>Mensagem:</strong> ${data[i].commit.message}</p>
+                        <div class='parent'>
+                            <div class='child' style="display: inline-block; vertical-align: middle;">
+                                <img style="width: 50px; height:50px; border-radius: 12%;" src="${data[i].author.avatar_url}">
+                            </div>
+                            <div class='child' style="display: inline-block; vertical-align: middle;">
+                                <strong>${data[i].author.login}</strong>
+                                <br>
+                                ${commitDate}
+                            </div>
+                        </div>
+                        <p><br><strong>Commit:</strong> ${data[i].commit.message}</p>
                     `);
 
                         ul.appendChild(li);
