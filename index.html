@@ -14,16 +14,18 @@
 
 <body>
     <div class="mx-auto bg-light mt-5" style="width: 400px; border-radius: 0.5rem;">
-        <div class="w-100 pr-5 pl-5 pt-1 pb-1">
-            <h3 class="text-center mt-5">GitHub API</h3>
-            <form id="gitHubForm" class="form-inline mx-auto w-100 p-2">
+        <div class="w-100 pb-1">
+            <div class="w-100" style="background: coral;">
+                <h3 class="text-center mt-5" style="line-height: 6rem;">GitHub API</h3>
+            </div>
+            <form id="gitHubForm" class="form-inline mx-auto w-100 p-2 pr-5 pl-5">
 
                 <label for="usernameInput">Usuário do Github</label>
                 <div class="input-group mb-3">
                     <input id="usernameInput" class="form-control mb-3" type="text" name="username" placeholder="GitHub Username">
 
                     <div class="input-group-append">
-                        <button class="btn btn-outline-info mb-3 text-dark" id="searchRepoButton">
+                        <button class="btn btn-outline-secondary mb-3 text-dark" id="searchRepoButton">
                             Buscar
                         </button>
                     </div>
@@ -33,7 +35,7 @@
                 <select id="repositorySelect" class="custom-select mb-5 w-100" name="repository" disabled>
                 </select>
 
-                <input type="submit" id="inputSubmit" class="btn btn-primary mb-3 w-100" value="Buscar">
+                <input type="submit" id="inputSubmit" class="btn btn-dark mb-3 w-100" value="Buscar">
             </form>
             <ul id="repoCommits" class="list-group mx-auto mb-5 w-100"></ul>
         </div>

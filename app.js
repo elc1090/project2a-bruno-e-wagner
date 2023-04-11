@@ -28,6 +28,7 @@ gitHubForm.addEventListener('submit', (e) => {
 
                         li.innerHTML = (`
                         <p><strong>Data:</strong> ${commitDate}</p>
+                        <p><strong>avatar:</strong> <img style="width: 50px; height:50px;" src="${data[i].author.avatar_url}"></p>
                         <p><strong>Mensagem:</strong> ${data[i].commit.message}</p>
                     `);
 
@@ -60,7 +61,7 @@ searchRepoButton.addEventListener('click', (e) => {
                 if (data.message === "Not Found") {
                     alert('Usuário não encontrado')
                 } else {
-                    selectOptions += `<option value="${data[i].name}">${data[i].name}</option></p>`;
+                    selectOptions += `<option value="${data[i].name}">${data[i].name}</option>`;
                 }
             }
 
